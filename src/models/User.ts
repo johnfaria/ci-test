@@ -1,28 +1,52 @@
-
-import { Cascade, Collection, Entity, OneToMany, Property, ManyToOne } from '@mikro-orm/core';
-import { BaseEntity } from './BaseEntity';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  Unique,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm'
+import { Length} from 'class-validator'
+import * as bcrypt from 'bcryptjs'
 
 @Entity()
-export class User extends BaseEntity {
+@Unique(['username', 'email'])
+export class User {
+  @PrimaryGeneratedColumn()
+  id: number
 
-  @Property()
-  name: string;
+  @Column()
+  @Length(4, 20)
+  username: string
 
-  @Property()
-  email: string;
+  @Column()
+  @Length(4, 100)
+  password: string
 
-  @Property()
-  age?: number;
+  @Column()
+  @Length(4, 100)
+  email: string
 
-  @Property()
-  termsAccepted = false;
+  @Column()
+  @Length(4, 100)
+  fullname: string
 
-  @Property()
-  born?: Date;
+  @Column()
+  @CreateDateColumn()
+  createdAt: Date
 
-  constructor(name: string, email: string) {
-    super();
-    this.name = name;
-    this.email = email;
+  @Column()
+  @UpdateDateColumn()
+  updatedAt: Date
+
+  async hashPassword(): Promise<void> {
+    const salt = await bcrypt.genSalt(10)
+    this.password = await bcrypt.hash(this.password, salt)
+  }
+
+  async checkIfUnencryptedPasswordIsValid(
+    unencryptedPassword: string
+  ): Promise<boolean> {
+    return await bcrypt.compare(unencryptedPassword, this.password)
   }
 }
