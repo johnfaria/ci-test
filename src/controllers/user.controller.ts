@@ -19,7 +19,6 @@ export async function postUser(req: Request, res: Response): Promise<void> {
   user.fullname = fullname
   user.email = email
   user.password = password
-  await user.hashPassword()
   const result = await getRepository(User).save(user)
   res.send(result)
 }

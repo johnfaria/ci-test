@@ -1,17 +1,21 @@
 import express, { Application } from 'express'
 import * as http from 'http'
-import indexRoute from '@src/routes/user.route'
+import userRoute from '@src/routes/user.route'
 import * as database from './database'
 import logger from './logger'
 import cors from 'cors'
 import expressPino from 'express-pino-logger'
 import { Connection } from 'typeorm'
+import config, { IConfig } from 'config'
 
 export class SetupServer {
   private server?: http.Server
   private database?: Connection
 
-  constructor(private port = 3000, private app: Application = express()) {}
+  constructor(
+    private port: IConfig = config.get('App.port'),
+    private app: Application = express()
+  ) {}
 
   public get App(): Application {
     return this.app
@@ -30,7 +34,7 @@ export class SetupServer {
   }
 
   private controllers(): void {
-    this.app.use('/api/user', indexRoute)
+    this.app.use('/api/user', userRoute)
   }
 
   private async initDatabase(): Promise<void> {

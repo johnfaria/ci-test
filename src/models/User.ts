@@ -5,6 +5,7 @@ import {
   Unique,
   CreateDateColumn,
   UpdateDateColumn,
+  BeforeInsert,
 } from 'typeorm'
 import { Length} from 'class-validator'
 import * as bcrypt from 'bcryptjs'
@@ -38,6 +39,12 @@ export class User {
   @Column()
   @UpdateDateColumn()
   updatedAt: Date
+
+  @BeforeInsert()
+  async beforeInsert(): Promise<void> {
+    const salt = await bcrypt.genSalt(10)
+    this.password = await bcrypt.hash(this.password, salt)
+  }
 
   async hashPassword(): Promise<void> {
     const salt = await bcrypt.genSalt(10)

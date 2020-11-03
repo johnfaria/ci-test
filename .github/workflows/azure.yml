@@ -18,9 +18,9 @@ on:
       - master
       
 env:
-  AZURE_WEBAPP_NAME: back-tcc    # set this to your application's name
+  AZURE_WEBAPP_NAME: myapp-ci    # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
-  NODE_VERSION: '10.x'                # set this to the node version to use
+  NODE_VERSION: '12.x'                # set this to the node version to use
 
 jobs:
   build-and-deploy:
@@ -32,12 +32,23 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ env.NODE_VERSION }}
+
+    - name: Setup Database
+      uses: harmon758/postgresql-action@v1
+      with:
+        postgresql version: '11'
+        postgresql db: 'dev'
+        postgresql user: 'postgres'
+        postgresql password: 'Pass2020!'
+
     - name: npm install, build, and test
       run: |
         # Build and test the project, then
         # deploy to Azure Web App.
+        npm install -g typescript
         npm install
         npm run build --if-present
+        npm run test
         
     - name: 'Deploy to Azure WebApp'
       uses: azure/webapps-deploy@v2

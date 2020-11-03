@@ -1,5 +1,6 @@
 import { SetupServer } from '@src/server'
 import supertest from 'supertest'
+import { getConnection } from 'typeorm'
 
 let server: SetupServer
 
@@ -12,3 +13,14 @@ beforeAll(async () => {
 afterAll(async () => {
   await server.closeDatabase()
 })
+
+afterEach(async () => {
+
+  // Fetch all the entities
+  const entities = getConnection().entityMetadatas;
+
+  for (const entity of entities) {
+      const repository = await getConnection().getRepository(entity.name); // Get repository
+      await repository.clear(); // Clear each entity table's content
+  }
+});
