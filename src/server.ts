@@ -1,6 +1,7 @@
 import express, { Application } from 'express'
 import * as http from 'http'
 import userRoute from '@src/routes/user.route'
+import authRoute from '@src/routes/auth.route'
 import * as database from './database'
 import logger from './logger'
 import cors from 'cors'
@@ -35,6 +36,7 @@ export class SetupServer {
 
   private controllers(): void {
     this.app.use('/api/user', userRoute)
+    this.app.use('/auth/', authRoute)
   }
 
   private async initDatabase(): Promise<void> {

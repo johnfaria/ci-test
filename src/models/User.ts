@@ -20,7 +20,7 @@ export class User {
   @Length(4, 20)
   username: string
 
-  @Column()
+  @Column({select: false})
   @Length(4, 100)
   password: string
 
@@ -31,6 +31,9 @@ export class User {
   @Column()
   @Length(4, 100)
   fullname: string
+
+  @Column("simple-array", { default: "" })
+  languages: string[];
 
   @Column()
   @CreateDateColumn()
@@ -46,12 +49,12 @@ export class User {
     this.password = await bcrypt.hash(this.password, salt)
   }
 
-  async hashPassword(): Promise<void> {
+  async encryptPassword(): Promise<void> {
     const salt = await bcrypt.genSalt(10)
     this.password = await bcrypt.hash(this.password, salt)
   }
 
-  async checkIfUnencryptedPasswordIsValid(
+  async validatePassword(
     unencryptedPassword: string
   ): Promise<boolean> {
     return await bcrypt.compare(unencryptedPassword, this.password)
