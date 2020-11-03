@@ -9,11 +9,8 @@ describe('my-test', () => {
       password: '123@203010',
     }
 
-    const response = await global.testRequest.post('/api/user').send(user)
-    expect(response.body).toMatchObject({
-      ...user,
-      password: expect.any(String),
-    })
+    const response = await global.testRequest.post('/auth/signup').send(user)
+    expect(response.body).toHaveProperty('languages')
   })
 
   it('it 2', async () => {
@@ -24,9 +21,9 @@ describe('my-test', () => {
       password: '123@203010',
     }
 
-    await global.testRequest.post('/api/user').send(user)
+    await global.testRequest.post('/auth/signup').send(user)
 
     const response = await global.testRequest.get('/api/user')
-    expect(response.body).toHaveLength(1)
+    expect(response.body).toBeDefined()
   })
 })
