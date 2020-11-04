@@ -19,7 +19,7 @@ on:
       
 env:
   AZURE_WEBAPP_NAME: myapp-ci    # set this to your application's name
-  AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
+  AZURE_WEBAPP_PACKAGE_PATH: 'dist'      # set this to the path to your web app project, defaults to the repository root
   NODE_VERSION: '12.x'                # set this to the node version to use
 
 jobs:
@@ -37,7 +37,7 @@ jobs:
       uses: harmon758/postgresql-action@v1
       with:
         postgresql version: '11'
-        postgresql db: 'dev'
+        postgresql db: 'test'
         postgresql user: 'postgres'
         postgresql password: 'Pass2020!'
 

@@ -1,5 +1,3 @@
-import { strict } from 'assert'
-
 describe('my-test', () => {
   it('it 1', async () => {
     const user = {
